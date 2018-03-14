@@ -1,0 +1,20 @@
+{application, deigo,
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { deigo_app, []}},
+  {applications,
+   [kernel,
+    stdlib,
+    mnesia,
+    lager,
+    ranch,
+    poolboy
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, []},
+  {licenses, ["Apache 2.0"]},
+  {links, []}
+ ]}.
