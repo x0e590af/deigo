@@ -8,8 +8,7 @@
     stdlib,
     mnesia,
     lager,
-    ranch,
-    poolboy
+    ranch
    ]},
   {env,[]},
   {modules, []},
