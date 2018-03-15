@@ -5,36 +5,24 @@
     127.0.0.1       host1
     127.0.0.1       host2
  
-### download
+### download 
         
-    https://github.com/x0e590af/deigo
-    download  deigo-0.1.2.tar.gz
-    tar zxvf 0.1.2.tar.gz
-    
-### dep
+    wget https://github.com/x0e590af/deigo/releases/download/0.1.5/deigo-0.1.5.tar.gz
+    tar zxvf 0.1.5.tar.gz
+    cd  deigo-0.1.5
 
-    cp deigo-0.1.2 /data/work/deigo_node
+### config 
+    cat conf/default.sh
     
-    
-### node1  config       
-
-    cd /data/work/deigo_node
-    
-    vim start.sh
-    
-    #!/bin/bash
-    
+    #!/usr/bin/env bash
+ 
     export RELX_REPLACE_OS_VARS=true
-    
     export NODE_NAME=node1@host1
     export COOKIE_NAME=cookiedeigo
     export PORT=9528
-
-    ./bin/deigo console
     
-### run 
-         
-    sh start.sh
+### run                 
+    sh ./bin/deigo_client.sh  start
     
     
 ### client
