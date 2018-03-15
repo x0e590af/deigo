@@ -13,13 +13,12 @@
     
 ### dep
 
-    cp deigo-0.1.2 /data/work/deigo_node_1
-    cp deigo-0.1.2 /data/work/deigo_node_2
-
+    cp deigo-0.1.2 /data/work/deigo_node
+    
     
 ### node1  config       
 
-    cd /data/work/deigo_node_1
+    cd /data/work/deigo_node
     
     vim start.sh
     
