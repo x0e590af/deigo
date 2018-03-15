@@ -6,13 +6,14 @@
     127.0.0.1       host2
  
 ### download
-
-    wget  https://github.com/x0e590af/deigo_release/blob/master/deigo-release-0.1.zip
-    unzip deigo-release-0.1.zip
+        
+    https://github.com/x0e590af/deigo
+    download  deigo-0.1.2.tar.gz
+    tar zxvf 0.1.2.tar.gz
 ### dep
 
-    cp deigo /data/work/deigo_node_1
-    cp deigo /data/work/deigo_node_2
+    cp deigo-0.1.2 /data/work/deigo_node_1
+    cp deigo-0.1.2 /data/work/deigo_node_2
 
     
 ### node1  config       
