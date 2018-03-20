@@ -49,17 +49,17 @@ handle_info({tcp, Socket, Data}, State=#state{socket=Socket, transport=Transport
 
   Result = deigo_parse:parse(Data),
 
- % try
+ try
     Response = execute(Result),
     Transport:setopts(Socket, [{active, once}]),
-    Transport:send(Socket, Response),
-%%  catch
-%%    _:_ ->
-%%    Error = deigo_parse:reply_error(<<"Error Command">>),
-%%    Transport:setopts(Socket, [{active, once}]),
-%%    Transport:send(Socket,Error )
-%%
-%%  end,
+    Transport:send(Socket, Response)
+  catch
+    _:_ ->
+    Error = deigo_parse:reply_error(<<"Error Command">>),
+    Transport:setopts(Socket, [{active, once}]),
+    Transport:send(Socket,Error )
+
+  end,
 
 
   {noreply, State};
@@ -91,10 +91,19 @@ code_change(_OldVsn, State, _Extra) ->
 %%% Internal functions
 %%--------------------------------------------------------------------
 
-
 execute({array, [{bulk, <<"COMMAND">>}]}) ->
 
   deigo_server:command(<<>>);
+
+execute({array, [{bulk, <<"INITDB">>}]}) ->
+
+  deigo_server:initdb();
+
+execute({array, [{bulk, <<"INITTB">>}]}) ->
+
+  deigo_server:inittb();
+
+
 
 execute({array, [{bulk, <<"KEYS">>} | Params]}) ->
   [{bulk,Key}] = Params,

@@ -11,15 +11,64 @@
 
 
 %% API
--export([command/1, keys/1, get/1, set/1, flushdb/1]).
+-export([initdb/0,inittb/0, command/1, keys/1, get/1, set/1, flushdb/1]).
 
 %%
 %% string
 %%
 
+
+
 command(Key) ->
+
   deigo_parse:reply_single(Key).
 
+initdb() ->
+
+  try
+    Nodes = [node()|nodes()],
+    lager:info("server:~p", [Nodes] ),
+
+
+    rpc:multicall(Nodes, mnesia, stop, []),
+    mnesia:delete_schema(Nodes),
+    mnesia:create_schema(Nodes),
+    rpc:multicall(Nodes, mnesia, start, []),
+
+    deigo_parse:reply_status(<<"OK">>)
+
+  catch
+    _:_ ->
+    deigo_parse:reply_error(<<"init error">>)
+  end.
+
+inittb() ->
+
+  try
+
+
+      Tables = [
+          deigo_mnesia_table
+      ],
+
+      lists:foreach(fun(T)->
+
+          case  lists:member(T,  mnesia:system_info(tables)) of
+            true ->
+              deigo_parse:reply_status(<<"already_exists">>) ;
+            _ ->
+              mnesia:create_table(T,[{disc_copies,[node()|nodes()]}])
+
+          end
+
+      end,Tables),
+
+      deigo_parse:reply_status(<<"OK">>)
+
+  catch
+    _:_ ->
+      deigo_parse:reply_error(<<"init error">>)
+  end.
 
 
 flushdb({Database }) ->

@@ -1,6 +1,6 @@
 {application, deigo,
  [{description, "An OTP application"},
-  {vsn, "0.1.5"},
+  {vsn, "0.1.6"},
   {registered, []},
   {mod, { deigo_app, []}},
   {applications,
