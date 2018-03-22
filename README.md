@@ -51,3 +51,27 @@
 	127.0.0.1:9528> KEYS *
 	(nil)
 	127.0.0.1:9528>
+	
+### backup 
+	
+	➜  test redis-cli -p 9528
+    127.0.0.1:9528> INITDB
+    OK
+    127.0.0.1:9528> INITTB
+    OK
+    127.0.0.1:9528> SET key1 value1
+    OK
+    127.0.0.1:9528> KEYS *
+    1) "key1"
+    127.0.0.1:9528> BACKUP "/data/backup.log"
+    
+### restore  
+ 
+    ➜  test redis-cli -p 9528
+    127.0.0.1:9528> INITDB
+    OK
+    127.0.0.1:9528> RESTORE "/data/backup.log"
+    OK
+    127.0.0.1:9528> KEYS *
+    1) "key1"
+    2) "key3"     
