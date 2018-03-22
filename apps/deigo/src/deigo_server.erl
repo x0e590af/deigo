@@ -11,7 +11,7 @@
 
 
 %% API
--export([initdb/0,inittb/0, command/1, keys/1, get/1, set/1, flushdb/1]).
+-export([initdb/0,inittb/0, command/1, keys/1, get/1, set/1, flushdb/1, backup/1, restore/1]).
 
 %%
 %% string
@@ -27,13 +27,13 @@ initdb() ->
 
   try
     Nodes = [node()|nodes()],
-    lager:info("server:~p", [Nodes] ),
-
 
     rpc:multicall(Nodes, mnesia, stop, []),
     mnesia:delete_schema(Nodes),
     mnesia:create_schema(Nodes),
     rpc:multicall(Nodes, mnesia, start, []),
+
+    inittb(),
 
     deigo_parse:reply_status(<<"OK">>)
 
@@ -68,6 +68,44 @@ inittb() ->
   catch
     _:_ ->
       deigo_parse:reply_error(<<"init error">>)
+  end.
+
+
+restore({restore,Path }) ->
+
+
+  try
+
+    case deigo_opt:restore(Path) of
+
+      ok ->
+        deigo_parse:reply_status(<<"OK">>);
+      _ ->
+        deigo_parse:reply_error(<<"ERR Operation against a key holding the wrong kind of value">>)
+    end
+
+  catch
+    _:_ ->
+      deigo_parse:reply_error(<<"ERR wrong number of arguments for 'get' command">>)
+  end.
+
+
+backup({Database,Path }) ->
+
+
+  try
+
+    case deigo_opt:backup(Database,Path) of
+
+      ok ->
+        deigo_parse:reply_status(<<"OK">>);
+      _ ->
+        deigo_parse:reply_error(<<"ERR Operation against a key holding the wrong kind of value">>)
+    end
+
+  catch
+    _:_ ->
+      deigo_parse:reply_error(<<"ERR wrong number of arguments for 'get' command">>)
   end.
 
 

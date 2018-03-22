@@ -49,17 +49,17 @@ handle_info({tcp, Socket, Data}, State=#state{socket=Socket, transport=Transport
 
   Result = deigo_parse:parse(Data),
 
- try
+%% try
     Response = execute(Result),
     Transport:setopts(Socket, [{active, once}]),
-    Transport:send(Socket, Response)
-  catch
-    _:_ ->
-    Error = deigo_parse:reply_error(<<"Error Command">>),
-    Transport:setopts(Socket, [{active, once}]),
-    Transport:send(Socket,Error )
-
-  end,
+    Transport:send(Socket, Response),
+%%  catch
+%%    _:_ ->
+%%    Error = deigo_parse:reply_error(<<"Error Command">>),
+%%    Transport:setopts(Socket, [{active, once}]),
+%%    Transport:send(Socket,Error )
+%%
+%%  end,
 
 
   {noreply, State};
@@ -103,6 +103,13 @@ execute({array, [{bulk, <<"INITTB">>}]}) ->
 
   deigo_server:inittb();
 
+execute({array, [{bulk, <<"BACKUP">>}, {bulk, Path}]}) ->
+
+  deigo_server:backup({deigo_mnesia_table, Path});
+
+execute({array, [{bulk, <<"RESTORE">>}, {bulk, Path}]}) ->
+
+  deigo_server:restore({restore, Path});
 
 
 execute({array, [{bulk, <<"KEYS">>} | Params]}) ->

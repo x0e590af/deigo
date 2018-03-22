@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf  ./_build/
+rm -rf  ./_build/release/rel/
 
 rebar3 as release tar
 

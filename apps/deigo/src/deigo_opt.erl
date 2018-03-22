@@ -16,8 +16,32 @@
   delete/2,
   delete_object/1,
   clear_table/1,
-  select/2
+  select/2,
+  desc/1,
+  backup/2,
+  restore/1
 ]).
+
+
+
+restore(Path) ->
+
+  mnesia:restore(binary_to_list(Path), []).
+
+
+backup(Tab, Path) ->
+
+  {ok, Name, _} = mnesia:activate_checkpoint( [ { max, [Tab] } ] ),
+
+  mnesia:backup_checkpoint( Name, binary_to_list(Path), [] ),
+
+  mnesia:deactivate_checkpoint( Name ).
+
+
+desc (Tab) ->
+
+  Info = fun(Tab, Item) -> mnesia:table_info(Tab, Item) end,
+  mnesia:activity(sync_dirty, Info, [prim_dict, frag_size], mnesia_frag).
 
 
 keys(Tab,<<"*">>) ->
@@ -25,8 +49,6 @@ keys(Tab,<<"*">>) ->
 
 keys(Tab,Key) ->
   mnesia:dirty_read(Tab, Key).
-
-
 
 select(Tab,MatchSpec) ->
   Sel = fun(Tab1,MatchSpec1) -> mnesia:select(Tab1,MatchSpec1) end,
