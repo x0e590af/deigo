@@ -25,9 +25,12 @@
     sh ./bin/deigo_client.sh  start
     
     
-### client
+### client install db
 
 	➜  test redis-cli -p 9528
+	
+	127.0.0.1:9528> INITDB
+    OK
 	127.0.0.1:9528> KEYS *
 	(nil)
 	127.0.0.1:9528> SET key1 value1
@@ -52,12 +55,56 @@
 	(nil)
 	127.0.0.1:9528>
 	
-### backup 
+### SET GET KEYS
+    127.0.0.1:9528> SET key1 value1
+	OK
+	127.0.0.1:9528> GET key1
+	"value1"
+	127.0.0.1:9528> SET key2 value2
+	OK
+	127.0.0.1:9528> GET key2
+	"value2"
+	127.0.0.1:9528> KEYS *
+	1) "key1"
+	2) "key2"
+	
+	
+### HSET HMGET HDEL
+
+    127.0.0.1:9528> INITDB
+    OK
+    127.0.0.1:9528> HSET hhset hk4 hv4
+    (integer) 1
+    127.0.0.1:9528> HSET hhset hk3 hv3
+    (integer) 1
+    127.0.0.1:9528> HSET hhset hk2 hv2
+    (integer) 1
+    127.0.0.1:9528> HSET hhset hk1 hv1
+    (integer) 1
+    127.0.0.1:9528> HMGET hhset
+    1) "hk1"
+    2) "hv1"
+    3) "hk2"
+    4) "hv2"
+    5) "hk3"
+    6) "hv3"
+    7) "hk4"
+    8) "hv4"
+    127.0.0.1:9528> HDEL hhset hk1
+    (integer) 1
+    127.0.0.1:9528> HMGET hhset
+    1) "hk2"
+    2) "hv2"
+    3) "hk3"
+    4) "hv3"
+    5) "hk4"
+    6) "hv4"
+
+	
+###  BACKUP 
 	
 	➜  test redis-cli -p 9528
     127.0.0.1:9528> INITDB
-    OK
-    127.0.0.1:9528> INITTB
     OK
     127.0.0.1:9528> SET key1 value1
     OK
@@ -65,7 +112,7 @@
     1) "key1"
     127.0.0.1:9528> BACKUP "/data/backup.log"
     
-### restore  
+### RESTORE  
  
     ➜  test redis-cli -p 9528
     127.0.0.1:9528> INITDB

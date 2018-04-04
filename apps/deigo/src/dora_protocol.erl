@@ -49,17 +49,17 @@ handle_info({tcp, Socket, Data}, State=#state{socket=Socket, transport=Transport
 
   Result = deigo_parse:parse(Data),
 
-%% try
+  try
     Response = execute(Result),
     Transport:setopts(Socket, [{active, once}]),
-    Transport:send(Socket, Response),
-%%  catch
-%%    _:_ ->
-%%    Error = deigo_parse:reply_error(<<"Error Command">>),
-%%    Transport:setopts(Socket, [{active, once}]),
-%%    Transport:send(Socket,Error )
-%%
-%%  end,
+    Transport:send(Socket, Response)
+  catch
+    _:_ ->
+    Error = deigo_parse:reply_error(<<"Error Command">>),
+    Transport:setopts(Socket, [{active, once}]),
+    Transport:send(Socket,Error )
+
+  end,
 
 
   {noreply, State};
@@ -95,6 +95,9 @@ execute({array, [{bulk, <<"COMMAND">>}]}) ->
 
   deigo_server:command(<<>>);
 
+
+
+
 execute({array, [{bulk, <<"INITDB">>}]}) ->
 
   deigo_server:initdb();
@@ -102,6 +105,13 @@ execute({array, [{bulk, <<"INITDB">>}]}) ->
 execute({array, [{bulk, <<"INITTB">>}]}) ->
 
   deigo_server:inittb();
+
+execute({array, [{bulk, <<"FLUSHDB">>}]}) ->
+
+  deigo_server:flushdb({deigo_mnesia_table});
+
+
+
 
 execute({array, [{bulk, <<"BACKUP">>}, {bulk, Path}]}) ->
 
@@ -112,21 +122,39 @@ execute({array, [{bulk, <<"RESTORE">>}, {bulk, Path}]}) ->
   deigo_server:restore({restore, Path});
 
 
+
+
 execute({array, [{bulk, <<"KEYS">>} | Params]}) ->
   [{bulk,Key}] = Params,
   deigo_server:keys({deigo_mnesia_table, Key});
-
-execute({array, [{bulk, <<"FLUSHDB">>}]}) ->
-
-  deigo_server:flushdb({deigo_mnesia_table});
-
 
 execute({array, [{bulk, <<"GET">>}, {bulk, Key}]}) ->
   deigo_server:get({deigo_mnesia_table, Key});
 
 execute({array, [{bulk, <<"SET">>} | Params]}) ->
   [{bulk,Key},{bulk,Value}] = Params,
-  deigo_server:set({deigo_mnesia_table,Key, Value}).
+  deigo_server:set({deigo_mnesia_table,Key, Value});
+
+
+
+
+
+execute({array, [{bulk, <<"HSET">>} | Params]}) ->
+  [{bulk,Key}, {bulk,Field},{bulk,Value}] = Params,
+  deigo_server:hset({deigo_mnesia_table,Key, Field, Value});
+
+execute({array, [{bulk, <<"HGET">>} | Params]}) ->
+  [{bulk,Key}, {bulk,Field}] = Params,
+  deigo_server:hget({deigo_mnesia_table,Key, Field});
+
+execute({array, [{bulk, <<"HDEL">>} | Params]}) ->
+  [{bulk,Key},{bulk,Field}] = Params,
+  deigo_server:hdel({deigo_mnesia_table,[Key,Field]});
+
+execute({array, [{bulk, <<"HMGET">>}, {bulk, Key}]}) ->
+  deigo_server:hgetall({deigo_mnesia_table, Key}).
+
+
 
 
 
