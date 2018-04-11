@@ -102,10 +102,6 @@ execute({array, [{bulk, <<"INITDB">>}]}) ->
 
   deigo_server:initdb();
 
-execute({array, [{bulk, <<"INITTB">>}]}) ->
-
-  deigo_server:inittb();
-
 execute({array, [{bulk, <<"FLUSHDB">>}]}) ->
 
   deigo_server:flushdb({deigo_mnesia_table});

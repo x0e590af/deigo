@@ -38,7 +38,7 @@ init([]) ->
     lager:info("listen_port : ~p", [list_to_integer(ListenPort)]),
 
 
-    ranch:start_listener(deigo,
+    ranch:start_listener(dora_protocol,
         ranch_tcp, [{port, list_to_integer(ListenPort)}, {max_connections, 10000}], dora_protocol, []),
 
 

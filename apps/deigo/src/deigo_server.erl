@@ -10,6 +10,7 @@
 -author("x0e590af").
 
 
+
 %% API
 
 -export([command/1]).
@@ -42,7 +43,12 @@ command(Key) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 initdb() ->
 
+
+
   try
+
+
+
     Nodes = [node() | nodes()],
 
     rpc:multicall(Nodes, mnesia, stop, []),
@@ -58,6 +64,9 @@ initdb() ->
     _:_ ->
       deigo_parse:reply_error(<<"init error">>)
   end.
+
+
+
 
 inittb() ->
 
