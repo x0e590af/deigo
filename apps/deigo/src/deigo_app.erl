@@ -22,6 +22,7 @@
 
 start(_StartType, _StartArgs) ->
 
+
     ensure_dir(),
 
     Nodes = config_nodes(),

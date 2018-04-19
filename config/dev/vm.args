@@ -1,0 +1,12 @@
+-sname node2@host2
+
+-setcookie  deigocookie
+
+
+
++P 1024000
++Q 65535
++K true
++A30
+
+-heart

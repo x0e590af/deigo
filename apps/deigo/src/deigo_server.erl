@@ -9,7 +9,7 @@
 -module(deigo_server).
 -author("x0e590af").
 
-
+-include("base.hrl").
 
 %% API
 
