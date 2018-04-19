@@ -7,22 +7,30 @@
  
 ### download 
         
-    wget https://github.com/x0e590af/deigo/releases/download/0.1.5/deigo-0.1.5.tar.gz
-    tar zxvf 0.1.5.tar.gz
-    cd  deigo-0.1.5
+    wget https://github.com/x0e590af/deigo/releases/latest
+    tar zxvf xxxx.tar.gz
+    cd  deigo-0.x.x
 
 ### config 
-    cat conf/default.sh
+    cat etc/sys.config
     
-    #!/usr/bin/env bash
+    [
+      { deigo, [
+        {listen_port,"9528"},
+        {hosts, ['node1@host1','node2@host2']}
+      ]}
+    
+    ].
+    
+    cat etc/vm.args
+    
+    -sname node1@host1 
+    -setcookie  cookiedeigo
+
  
-    export RELX_REPLACE_OS_VARS=true
-    export NODE_NAME=node1@host1
-    export COOKIE_NAME=cookiedeigo
-    export PORT=9528
     
 ### run                 
-    sh ./bin/deigo_client.sh  start
+    ./bin/deigo start
     
     
 ### client install db
